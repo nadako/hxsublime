@@ -1,0 +1,20 @@
+{
+    "name": "HXML",
+    "scopeName": "source.hxml",
+    "uuid": "766cf9f0-30fd-11e4-8c21-0800200c9a66",
+    "fileTypes": ["hxml"],
+    "patterns": [
+        {
+            "name": "comment.line.number-sign.hxml",
+            "match": "^\\s*#.*$"
+        },
+        {
+            "name": "keyword.other.hxml",
+            "match": "^\\s*-(cpp?|js|swf(-(version|header|lib(-extern)?))?|as3|neko|php|cs|java(-lib)?|python|xml|main|lib|D|v(ersion)?|debug|dce|net-(lib|std)|x|resource|prompt|cmd|-(flash-strict|no-(traces|output|inline|opt)|gen-hx-classes|next|display|times|php-(front|lib|prefix)|remap|interp|macro|wait|connect|cwd|help-(defines|metas)))"
+        },
+        {
+            "name": "entity.name.class.hxml",
+            "match": "^\\s*([a-z0-9_]+\\.)*[A-Z]\\w*"
+        }
+    ]
+}

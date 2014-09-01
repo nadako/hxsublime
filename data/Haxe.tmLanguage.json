@@ -1,0 +1,101 @@
+{
+    "name": "Haxe",
+    "scopeName": "source.haxe",
+    "uuid": "ef73f5d0-303d-11e4-8c21-0800200c9a66",
+    "fileTypes": ["hx"],
+    "patterns": [
+        {
+            "name": "comment.line.double-slash.haxe",
+            "match": "//.*$"
+        },
+        {
+            "name": "comment.block.haxe",
+            "begin": "/\\*",
+            "end": "\\*/"
+        },
+        {
+            "name": "string.quoted.double.haxe",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                {
+                    "match": "\\\\.",
+                    "name": "constant.character.escape.haxe"
+                }
+            ]
+        },
+        {
+            "name": "string.quoted.single.interpolated.haxe",
+            "begin": "'",
+            "end": "'",
+            "patterns": [
+                {
+                    "match": "\\\\.",
+                    "name": "constant.character.escape.haxe"
+                },
+                {
+                    "match": "\\$\\$",
+                    "name": "constant.character.escape.haxe"
+                }
+            ]
+        },
+        {
+            "name": "string.regexp.haxe",
+            "match": "~/((\\\\/)|[^/])+/"
+        },
+        {
+            "match": "\\b(function)\\s+([a-zA-Z_]\\w*)\\s*\\((.*)\\)",
+            "captures": {
+                "1": {"name": "storage.type.function.haxe"},
+                "2": {"name": "entity.name.function.haxe"},
+                "3": {"name": "variable.parameter.haxe"}
+            }
+        },
+        {
+            "match": "\\b(class|interface|enum|abstract|typedef)\\s+(\\w+)",
+            "captures": {
+                "1": {"name": "storage.type.class.haxe"},
+                "2": {"name": "entity.name.class.haxe"}
+            }
+        },
+        {
+            "match": "\\b(extends|implements)\\s+((\\w+\\.)*\\w+)",
+            "captures": {
+                "1": {"name": "keyword.other.haxe"},
+                "2": {"name": "entity.other.inherited-class"}
+            }
+        },
+        {
+            "name": "storage.modifier.haxe",
+            "match": "\\b(static|public|private|extern|override|dynamic|inline)\\b"
+        },
+        {
+            "name": "keyword.other.haxe",
+            "match": "\\b(function|class|var|if|else|while|do|for|break|continue|return|extends|implements|import|switch|case|default|try|catch|new|throw|enum|in|interface|untyped|cast|typedef|package|using|abstract|macro|trace)\\b"
+        },
+        {
+            "name": "keyword.operator.haxe",
+            "match": "\\+|-|\\*|/|%|=|!|\\||&|\\^|>|<|\\.\\.\\."
+        },
+        {
+            "name": "constant.language.haxe",
+            "match": "\\b(true|false|null)\\b"
+        },
+        {
+            "name": "variable.language.haxe",
+            "match": "\\b(this|super)\\b"
+        },
+        {
+            "name": "constant.numeric.haxe",
+            "match": "\\b0x[0-9a-fA-F]+\\b"
+        },
+        {
+            "name": "constant.numeric.haxe",
+            "match": "\\.[0-9]+\\b"
+        },
+        {
+            "name": "constant.numeric.haxe",
+            "match": "\\b[0-9]+\\.?[0-9]*([eE][+-]?[0-9]+)?"
+        }
+    ]
+}

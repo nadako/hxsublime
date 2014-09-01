@@ -1,0 +1,21 @@
+{
+    "name": "Comments",
+    "scope": "source.haxe",
+    "settings": {
+        "shellVariables": [
+            {
+                "name": "TM_COMMENT_START",
+                "value": "// "
+            },
+            {
+                "name": "TM_COMMENT_START_2",
+                "value": "/*"
+            },
+            {
+                "name": "TM_COMMENT_END_2",
+                "value": "*/"
+            }
+        ]
+    },
+    "uuid": "53b0a470-3080-11e4-8c21-0800200c9a66"
+}
