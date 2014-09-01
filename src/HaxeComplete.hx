@@ -76,7 +76,7 @@ class HaxeComplete extends sublime.plugin.EventListener {
         }
 
         for (arg in build.args) {
-            if (cmd.indexOf(arg) == -1)
+            if (arg != "--no-output")
                 cmd.push(arg);
         }
 
