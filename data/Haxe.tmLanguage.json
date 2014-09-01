@@ -44,6 +44,10 @@
             "match": "~/((\\\\/)|[^/])+/"
         },
         {
+            "name": "storage.modifier.haxe",
+            "match": "@:enum\\b"
+        },
+        {
             "match": "\\b(function)\\s+([a-zA-Z_]\\w*)\\s*\\((.*)\\)",
             "captures": {
                 "1": {"name": "storage.type.function.haxe"},
