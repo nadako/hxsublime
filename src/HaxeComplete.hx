@@ -96,7 +96,13 @@ class HaxeComplete extends sublime.plugin.EventListener {
         restoreTempFile(view, tempFile);
         var out = result._1, err = result._2;
 
-        var xml = try python.lib.xml.etree.ElementTree.XML(err.decode()) catch (_:Dynamic) return null;
+        var result = err.decode();
+        var xml = try {
+            python.lib.xml.etree.ElementTree.XML(result);
+        } catch (_:Dynamic) {
+            trace("No completion:\n" + result);
+            return null;
+        }
 
         var result:Array<Tup2<String,String>> = [];
 
