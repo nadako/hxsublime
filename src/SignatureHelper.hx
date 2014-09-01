@@ -11,6 +11,7 @@ class SignatureHelper {
         return switch (c) {
             case "(": ")";
             case "<": ">";
+            case "{": "}";
             default: throw 'unknown opening char $c';
         }
     }
@@ -30,7 +31,7 @@ class SignatureHelper {
         var groupId = 0;
         for (i in 0...type.length) {
             var char = type.charAt(i);
-            if (char == "(" || char == "<") {
+            if (char == "(" || char == "<" || char == "{") {
                 depth++;
                 closeStack.add(getCloseChar(char));
                 if (depth == 1) {
