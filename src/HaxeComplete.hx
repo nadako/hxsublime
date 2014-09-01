@@ -75,8 +75,10 @@ class HaxeComplete extends sublime.plugin.EventListener {
             cmd.push(build.main);
         }
 
-        for (arg in build.args)
-            cmd.push(arg);
+        for (arg in build.args) {
+            if (cmd.indexOf(arg) == -1)
+                cmd.push(arg);
+        }
 
         var si = python.lib.Subprocess.STARTUPINFO();
         si.dwFlags = python.lib.Subprocess.STARTF_USESHOWWINDOW;
