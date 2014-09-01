@@ -39,15 +39,44 @@ class HaxeComplete extends sublime.plugin.EventListener {
 
         var mode = if (toplevel) "@toplevel" else "";
 
+        var folder = null;
+        for (f in view.window().folders()) {
+            if (fileName.startsWith(f)) {
+                folder = f;
+                break;
+            }
+        }
+
         var cmd = [
             "haxe",
-            "-cp", "src",
+            "--no-output",
             "--display",
             '$fileName@$bytePos$mode'
         ];
 
+        var buildFile = Path.join(folder, "build.hxml");
+        var build = BuildHelper.parse(sys.io.File.getContent(buildFile));
 
+        cmd.push("-" + build.target);
+        cmd.push(build.output);
 
+        for (cp in build.classPaths) {
+            cmd.push("-cp");
+            cmd.push(cp);
+        }
+
+        for (lib in build.libs) {
+            cmd.push("-lib");
+            cmd.push(lib);
+        }
+
+        if (build.main != null) {
+            cmd.push("-main");
+            cmd.push(build.main);
+        }
+
+        for (arg in build.args)
+            cmd.push(arg);
 
         var si = python.lib.Subprocess.STARTUPINFO();
         si.dwFlags = python.lib.Subprocess.STARTF_USESHOWWINDOW;
@@ -58,7 +87,8 @@ class HaxeComplete extends sublime.plugin.EventListener {
         var tempFile = saveTempFile(view);
         var proc = python.lib.subprocess.Popen.create(cmd, {
             startupinfo: si,
-            stderr: python.lib.Subprocess.PIPE
+            stderr: python.lib.Subprocess.PIPE,
+            cwd: folder
         });
         var result = proc.communicate(15);
         restoreTempFile(view, tempFile);
