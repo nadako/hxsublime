@@ -11,5 +11,8 @@ extern class View {
     function substr(region:Region):String;
     function run_command(string:String, ?args:Dict<String,Dynamic>):Void;
     function window():Window;
+    @:overload(function(region:Region):Region {})
+    function word(point:Int):Region;
+    function sel():Selection;
 
 }
