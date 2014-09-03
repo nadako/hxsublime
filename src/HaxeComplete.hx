@@ -8,6 +8,13 @@ import sublime.View;
 
 using StringTools;
 
+@:enum abstract FieldCompletionKind(String) {
+    var Var = "var";
+    var Method = "method";
+    var Type = "type";
+    var Package = "package";
+}
+
 class HaxeComplete extends sublime.plugin.EventListener {
     override function on_query_completions(view:sublime.View, prefix:String, locations:Array<Int>):Tup2<Array<Tup2<String,String>>, Int> {
         var pos = locations[0];
@@ -97,6 +104,7 @@ class HaxeComplete extends sublime.plugin.EventListener {
         var out = result._1, err = result._2;
 
         var result = err.decode();
+        trace(result);
         var xml = try {
             python.lib.xml.etree.ElementTree.XML(result);
         } catch (_:Dynamic) {
@@ -119,14 +127,11 @@ class HaxeComplete extends sublime.plugin.EventListener {
                 result.push(Tup2.create('$name$hint\t$kind', e.text));
             } else {
                 var name = e.attrib.get("n", "?");
-                var sig = e.find("t").text;
-                var hint = if (sig == null) {
-                    if (~/^[A-Z]/.match(name))
-                        "\tclass"
-                    else
-                        "\tpackage";
-                } else {
-                    SignatureHelper.prepareSignature(sig);
+                var kind:FieldCompletionKind = cast e.attrib.get("k", "");
+                var hint = switch (kind) {
+                    case Var | Method: SignatureHelper.prepareSignature(e.find("t").text);
+                    case Type: "\ttype";
+                    case Package: "\tpackage";
                 }
                 result.push(Tup2.create('$name$hint', name));
             }
