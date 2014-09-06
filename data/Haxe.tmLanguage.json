@@ -48,7 +48,7 @@
             "match": "@:enum\\b"
         },
         {
-            "match": "\\b(function)\\s+([a-zA-Z_]\\w*)\\s*\\((.*)\\)",
+            "match": "\\b(function)\\s+([a-zA-Z_]\\w*)(?:\\s*<.+>)?\\s*\\((.*)\\)",
             "captures": {
                 "1": {"name": "storage.type.function.haxe"},
                 "2": {"name": "entity.name.function.haxe"},
