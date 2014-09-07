@@ -1,5 +1,5 @@
 import python.lib.os.Path;
-
+import python.lib.subprocess.Popen;
 import python.lib.Tuple;
 import python.lib.Bytes;
 
@@ -15,7 +15,54 @@ using StringTools;
     var Package = "package";
 }
 
+class HaxeServer {
+    var proc:Popen;
+    var port:Int;
+
+    public function new() {
+    }
+
+    public function start(port:Int):Void {
+        if (proc != null)
+            stop();
+        this.port = port;
+        proc = new Popen(["haxe", "-v", "--wait", Std.string(port)]);
+    }
+
+    public function stop():Void {
+        if (proc != null) {
+            proc.terminate();
+            proc = null;
+        }
+    }
+
+    public function run(args:Array<String>):String {
+        var sock = new sys.net.Socket();
+        sock.connect(new sys.net.Host("127.0.0.1"), port);
+        for (arg in args) {
+            sock.output.writeString(arg);
+            sock.output.writeByte('\n'.code);
+        }
+        sock.output.writeInt8(0);
+        sock.waitForRead();
+        var buf = new StringBuf();
+        for (line in sock.read().split("\n")) {
+            switch (line.fastCodeAt(0)) {
+                case 0x01: // TODO: print
+                case 0x02: // TODO: show error
+                default:
+                    buf.add(line);
+                    buf.addChar('\n'.code);
+            }
+        }
+        sock.close();
+        return buf.toString();
+    }
+}
+
 class HaxeComplete extends sublime.plugin.EventListener {
+    var haxeServer:HaxeServer = null;
+
     override function on_query_completions(view:sublime.View, prefix:String, locations:Array<Int>):Tup2<Array<Tup2<String,String>>, Int> {
         var pos = locations[0];
 
@@ -32,6 +79,12 @@ class HaxeComplete extends sublime.plugin.EventListener {
         var fileName = view.file_name();
         if (fileName == null)
             return null;
+
+        var haxePort = 6000;
+        if (haxeServer == null) {
+            haxeServer = new HaxeServer();
+            haxeServer.start(haxePort);
+        }
 
         var offset = pos - prefix.length;
         var src = view.substr(new sublime.Region(0, view.size()));
@@ -94,16 +147,17 @@ class HaxeComplete extends sublime.plugin.EventListener {
         trace("Running completion " + cmd.join(" "));
 
         var tempFile = saveTempFile(view);
-        var proc = python.lib.subprocess.Popen.create(cmd, {
-            startupinfo: si,
-            stderr: python.lib.Subprocess.PIPE,
-            cwd: folder
-        });
-        var result = proc.communicate(15);
+        var result = haxeServer.run(["--cwd", folder].concat(cmd.slice(1)));
+        // var proc = Popen.create(cmd, {
+        //     startupinfo: si,
+        //     stderr: python.lib.Subprocess.PIPE,
+        //     cwd: folder
+        // });
+        // var result = proc.communicate(15);
         restoreTempFile(view, tempFile);
-        var out = result._1, err = result._2;
+        // var out = result._1, err = result._2;
 
-        var result = err.decode();
+        // var result = err.decode();
         trace(result);
         var xml = try {
             python.lib.xml.etree.ElementTree.XML(result);
