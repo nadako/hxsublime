@@ -75,6 +75,10 @@
         },
         {
             "name": "keyword.other.haxe",
+            "match": "#(if|else(if)?|end)"
+        },
+        {
+            "name": "keyword.other.haxe",
             "match": "\\b(function|class|var|if|else|while|do|for|break|continue|return|extends|implements|import|switch|case|default|try|catch|new|throw|enum|in|interface|untyped|cast|typedef|package|using|abstract|macro|trace)\\b"
         },
         {
