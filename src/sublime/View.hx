@@ -14,5 +14,5 @@ extern class View {
     @:overload(function(region:Region):Region {})
     function word(point:Int):Region;
     function sel():Selection;
-
+    function show_popup_menu(items:Array<String>, on_done:Int->Void):Void;
 }

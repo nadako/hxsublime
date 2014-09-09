@@ -7,4 +7,5 @@ extern class Sublime {
 
     static function set_timeout(callback:Void->Void, delay:Int):Void;
     static function windows():Array<Window>;
+    static function status_message(string:String):Void;
 }

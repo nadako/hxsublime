@@ -15,6 +15,12 @@ using StringTools;
     var Package = "package";
 }
 
+enum CompletionType {
+    Toplevel;
+    Field;
+    Argument;
+}
+
 class HaxeServer {
     var proc:Popen;
     var port:Int;
@@ -92,12 +98,16 @@ class HaxeComplete extends sublime.plugin.EventListener {
         var prev = src.charAt(offset - 1);
         var cur = src.charAt(offset);
 
-        var toplevel = (prev != "." && prev != "(");
+        var completionType:CompletionType = switch (prev) {
+            case ".": Field;
+            case "(": Toplevel;//Argument;
+            default: Toplevel;
+        }
 
         var b = python.NativeStringTools.encode(src.substr(0, offset), "utf-8");
         var bytePos = b.length;
 
-        var mode = if (toplevel) "@toplevel" else "";
+        var mode = if (completionType.match(Toplevel)) "@toplevel" else "";
 
         var folder = null;
         for (f in view.window().folders()) {
@@ -168,27 +178,35 @@ class HaxeComplete extends sublime.plugin.EventListener {
 
         var result:Array<Tup2<String,String>> = [];
 
-        for (e in xml.findall("i")) {
-            if (toplevel) {
-                var name = e.text;
-                var kind = e.attrib.get("k", "");
-                var hint = switch (kind) {
-                    case "local" | "member" | "static" | "enum" | "global":
-                        SignatureHelper.prepareSignature(e.attrib.get("t", null));
-                    default:
-                        "";
+        switch (completionType) {
+            case Toplevel:
+                for (e in xml.findall("i")) {
+                    var name = e.text;
+                    var kind = e.attrib.get("k", "");
+                    var hint = switch (kind) {
+                        case "local" | "member" | "static" | "enum" | "global":
+                            SignatureHelper.prepareSignature(e.attrib.get("t", null));
+                        default:
+                            "";
+                    }
+                    result.push(Tup2.create('$name$hint\t$kind', e.text));
                 }
-                result.push(Tup2.create('$name$hint\t$kind', e.text));
-            } else {
-                var name = e.attrib.get("n", "?");
-                var kind:FieldCompletionKind = cast e.attrib.get("k", "");
-                var hint = switch (kind) {
-                    case Var | Method: SignatureHelper.prepareSignature(e.find("t").text);
-                    case Type: "\ttype";
-                    case Package: "\tpackage";
+
+            case Field:
+                for (e in xml.findall("i")) {
+                    var name = e.attrib.get("n", "?");
+                    var kind:FieldCompletionKind = cast e.attrib.get("k", "");
+                    var hint = switch (kind) {
+                        case Var | Method: SignatureHelper.prepareSignature(e.find("t").text);
+                        case Type: "\ttype";
+                        case Package: "\tpackage";
+                    }
+                    result.push(Tup2.create('$name$hint', name));
                 }
-                result.push(Tup2.create('$name$hint', name));
-            }
+
+            case Argument:
+                view.show_popup_menu([xml.text], null);
+                return null;
         }
 
         return Tup2.create(result, sublime.Sublime.INHIBIT_WORD_COMPLETIONS);
