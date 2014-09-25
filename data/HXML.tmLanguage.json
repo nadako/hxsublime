@@ -10,7 +10,7 @@
         },
         {
             "name": "keyword.other.hxml",
-            "match": "^\\s*-(cpp?|js|swf(-(version|header|lib(-extern)?))?|as3|neko|php|cs|java(-lib)?|python|xml|main|lib|D|v(ersion)?|debug|dce|net-(lib|std)|x|resource|prompt|cmd|-(flash-strict|no-(traces|output|inline|opt)|gen-hx-classes|next|display|times|php-(front|lib|prefix)|remap|interp|macro|wait|connect|cwd|help-(defines|metas)))"
+            "match": "^\\s*-(cpp?|js|swf(-(version|header|lib(-extern)?))?|as3|neko|php|cs|java(-lib)?|python|xml|main|lib|D|v(ersion)?|debug|dce|net-(lib|std)|x|resource|prompt|cmd|-(flash-strict|no-(traces|output|inline|opt)|gen-hx-classes|each|next|display|times|php-(front|lib|prefix)|remap|interp|run|macro|wait|connect|cwd|help-(defines|metas)))"
         },
         {
             "name": "entity.name.class.hxml",
