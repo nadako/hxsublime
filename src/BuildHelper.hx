@@ -93,6 +93,13 @@ class BuildHelper {
                     build.target = cast target.substr(1);
                     build.output = output;
 
+                case Param("--run", main):
+                    build.target = Neko;
+                    build.main = main;
+
+                case Simple("--interp"):
+                    build.target = Neko;
+
                 case Param(name, value):
                     build.args.push(name);
                     build.args.push(value);
@@ -107,6 +114,11 @@ class BuildHelper {
                     build.args.push(name);
             }
         }
+
+        if (build.target == null)
+            build.target = Neko;
+        if (build.output == null)
+            build.output = "__none__";
 
         return build;
     }
