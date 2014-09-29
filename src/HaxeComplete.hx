@@ -67,7 +67,14 @@ class HaxeServer {
 }
 
 class HaxeComplete extends sublime.plugin.EventListener {
+
+    public static var instance(default,null):HaxeComplete;
+
     var haxeServer:HaxeServer = null;
+
+    function new() {
+        instance = this;
+    }
 
     override function on_query_completions(view:sublime.View, prefix:String, locations:Array<Int>):Tup2<Array<Tup2<String,String>>, Int> {
         var pos = locations[0];
@@ -85,12 +92,6 @@ class HaxeComplete extends sublime.plugin.EventListener {
         var fileName = view.file_name();
         if (fileName == null)
             return null;
-
-        var haxePort = 6000;
-        if (haxeServer == null) {
-            haxeServer = new HaxeServer();
-            haxeServer.start(haxePort);
-        }
 
         var offset = pos - prefix.length;
         var src = view.substr(new sublime.Region(0, view.size()));
@@ -118,7 +119,7 @@ class HaxeComplete extends sublime.plugin.EventListener {
         }
 
         var cmd = [
-            "haxe",
+            "--cwd", folder,
             "--no-output",
             "--display",
             '$fileName@$bytePos$mode'
@@ -150,25 +151,12 @@ class HaxeComplete extends sublime.plugin.EventListener {
                 cmd.push(arg);
         }
 
-        var si = python.lib.Subprocess.STARTUPINFO();
-        si.dwFlags = python.lib.Subprocess.STARTF_USESHOWWINDOW;
-        si.wShowWindow = python.lib.Subprocess.SW_HIDE;
-
         trace("Running completion " + cmd.join(" "));
 
         var tempFile = saveTempFile(view);
-        var result = haxeServer.run(["--cwd", folder].concat(cmd.slice(1)));
-        // var proc = Popen.create(cmd, {
-        //     startupinfo: si,
-        //     stderr: python.lib.Subprocess.PIPE,
-        //     cwd: folder
-        // });
-        // var result = proc.communicate(15);
+        var result = runHaxe(cmd);
         restoreTempFile(view, tempFile);
-        // var out = result._1, err = result._2;
 
-        // var result = err.decode();
-        trace(result);
         var xml = try {
             python.lib.xml.etree.ElementTree.XML(result);
         } catch (_:Dynamic) {
@@ -212,7 +200,16 @@ class HaxeComplete extends sublime.plugin.EventListener {
         return Tup2.create(result, sublime.Sublime.INHIBIT_WORD_COMPLETIONS);
     }
 
-    function saveTempFile(view:View):String {
+    public function runHaxe(args:Array<String>):String {
+        var haxePort = 6000;
+        if (haxeServer == null) {
+            haxeServer = new HaxeServer();
+            haxeServer.start(haxePort);
+        }
+        return haxeServer.run(args);
+    }
+
+    public function saveTempFile(view:View):String {
         var currentFile = view.file_name();
         var tempFile = currentFile + ".tmp";
         var content = view.substr(new sublime.Region(0, view.size()));
@@ -221,7 +218,7 @@ class HaxeComplete extends sublime.plugin.EventListener {
         return tempFile;
     }
 
-    function restoreTempFile(view:View, tempFile:String):Void {
+    public function restoreTempFile(view:View, tempFile:String):Void {
         var currentFile = view.file_name();
         python.lib.ShUtil.copy2(tempFile, currentFile);
         sys.FileSystem.deleteFile(tempFile);
