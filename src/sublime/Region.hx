@@ -6,6 +6,7 @@ extern class Region {
     var b:Int;
     var xpos:Int;
 
+    @:overload(function(pt:Int):Void {})
     function new(a:Int, b:Int);
 
     function begin():Int;

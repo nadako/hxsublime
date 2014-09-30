@@ -6,6 +6,8 @@ import python.lib.Bytes;
 import sublime.def.Exec;
 import sublime.View;
 
+import BuildHelper.Build;
+
 using StringTools;
 
 @:enum abstract FieldCompletionKind(String) {
@@ -125,8 +127,7 @@ class HaxeComplete extends sublime.plugin.EventListener {
             '$fileName@$bytePos$mode'
         ];
 
-        var buildFile = Path.join(folder, "build.hxml");
-        var build = BuildHelper.parse(sys.io.File.getContent(buildFile));
+        var build = getBuild(folder);
 
         cmd.push("-" + build.target);
         cmd.push(build.output);
@@ -198,6 +199,10 @@ class HaxeComplete extends sublime.plugin.EventListener {
         }
 
         return Tup2.create(result, sublime.Sublime.INHIBIT_WORD_COMPLETIONS);
+    }
+
+    public function getBuild(folder:String):Build {
+        return BuildHelper.parse(sys.io.File.getContent(Path.join(folder, "build.hxml")));
     }
 
     public function runHaxe(args:Array<String>):String {
