@@ -21,4 +21,7 @@ extern class View {
 
     @:overload(function(region:Region):Region {})
     function full_line(point:Int):Region;
+
+    function set_scratch(value:Bool):Void;
+    function set_read_only(value:Bool):Void;
 }
