@@ -78,7 +78,7 @@ class HaxeGotoDefinition extends sublime.plugin.TextCommand {
 
         trace(pos.text);
 
-        var path = re.matched(1);
+        var path = Utils.convertPath(re.matched(1));
         var line = Std.parseInt(re.matched(2));
         var mode = re.matched(3);
         var start = Std.parseInt(re.matched(4));
