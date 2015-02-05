@@ -123,8 +123,8 @@ class HaxeComplete extends sublime.plugin.EventListener {
         var cmd = [
             "--cwd", folder,
             "--no-output",
-            "--display",
-            '$fileName@$bytePos$mode'
+            "-D", "display-details",
+            "--display", '$fileName@$bytePos$mode'
         ];
 
         var build = getBuild(folder);
