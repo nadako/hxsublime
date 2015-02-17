@@ -218,14 +218,14 @@ class HaxeComplete extends sublime.plugin.EventListener {
         var currentFile = view.file_name();
         var tempFile = currentFile + ".tmp";
         var content = view.substr(new sublime.Region(0, view.size()));
-        python.lib.ShUtil.copy2(currentFile, tempFile);
+        python.lib.Shutil.copy2(currentFile, tempFile);
         sys.io.File.saveContent(currentFile, content);
         return tempFile;
     }
 
     public function restoreTempFile(view:View, tempFile:String):Void {
         var currentFile = view.file_name();
-        python.lib.ShUtil.copy2(tempFile, currentFile);
+        python.lib.Shutil.copy2(tempFile, currentFile);
         sys.FileSystem.deleteFile(tempFile);
     }
 }
