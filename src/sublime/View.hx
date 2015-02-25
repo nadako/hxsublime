@@ -24,4 +24,9 @@ extern class View {
 
     function set_scratch(value:Bool):Void;
     function set_read_only(value:Bool):Void;
+
+    function show_popup(content:String, ?flags:Int, ?location:Int, ?max_width:Int, ?max_height:Int, ?on_navigate:Void->Void, ?on_hide:Void->Void):Void;
+    function update_popup(content:String):Void;
+    function is_popup_visible():Bool;
+    function hide_popup():Void;
 }

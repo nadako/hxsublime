@@ -4,8 +4,8 @@ import sublime.View;
 
 using StringTools;
 
-class HaxeGotoDefinition extends sublime.plugin.TextCommand {
-    override function run(edit:sublime.Edit):Void {
+class HaxeGotoDefinition extends sublime.plugin.TextCommand<Dynamic> {
+    override function run(edit:sublime.Edit, ?_):Void {
         var fileName = view.file_name();
         if (fileName == null)
             return null;
