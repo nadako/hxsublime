@@ -178,7 +178,7 @@ class HaxeComplete extends sublime.plugin.EventListener {
                         default:
                             "";
                     }
-                    result.push(Tuple2.create('$name$hint\t$kind', e.text));
+                    result.push(Tuple2.make('$name$hint\t$kind', e.text));
                 }
 
             case Field:
@@ -190,7 +190,7 @@ class HaxeComplete extends sublime.plugin.EventListener {
                         case Type: "\ttype";
                         case Package: "\tpackage";
                     }
-                    result.push(Tuple2.create('$name$hint', name));
+                    result.push(Tuple2.make('$name$hint', name));
                 }
 
             case Argument:
@@ -198,7 +198,7 @@ class HaxeComplete extends sublime.plugin.EventListener {
                 return null;
         }
 
-        return Tuple2.create(result, sublime.Sublime.INHIBIT_WORD_COMPLETIONS);
+        return Tuple2.make(result, sublime.Sublime.INHIBIT_WORD_COMPLETIONS);
     }
 
     public function getBuild(folder:String):Build {
