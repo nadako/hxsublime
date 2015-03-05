@@ -1,6 +1,6 @@
 package sublime.def;
 
-import python.lib.Dict;
+import python.Dict;
 import python.lib.Bytes;
 
 @:pythonImport("Default.exec", "AsyncProcess")

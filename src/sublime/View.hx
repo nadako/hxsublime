@@ -1,6 +1,6 @@
 package sublime;
 
-import python.lib.Dict;
+import python.Dict;
 
 @:pythonImport("sublime", "View")
 extern class View {
