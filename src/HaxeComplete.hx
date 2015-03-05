@@ -1,6 +1,6 @@
 import python.lib.os.Path;
 import python.lib.subprocess.Popen;
-import python.lib.Tuple;
+import python.Tuple;
 import python.lib.Bytes;
 
 import sublime.def.Exec;
@@ -78,7 +78,7 @@ class HaxeComplete extends sublime.plugin.EventListener {
         instance = this;
     }
 
-    override function on_query_completions(view:sublime.View, prefix:String, locations:Array<Int>):Tup2<Array<Tup2<String,String>>, Int> {
+    override function on_query_completions(view:sublime.View, prefix:String, locations:Array<Int>):Tuple2<Array<Tuple2<String,String>>, Int> {
         var pos = locations[0];
 
         var scopeName = view.scope_name(pos);
@@ -165,7 +165,7 @@ class HaxeComplete extends sublime.plugin.EventListener {
             return null;
         }
 
-        var result:Array<Tup2<String,String>> = [];
+        var result:Array<Tuple2<String,String>> = [];
 
         switch (completionType) {
             case Toplevel:
@@ -178,7 +178,7 @@ class HaxeComplete extends sublime.plugin.EventListener {
                         default:
                             "";
                     }
-                    result.push(Tup2.create('$name$hint\t$kind', e.text));
+                    result.push(Tuple2.create('$name$hint\t$kind', e.text));
                 }
 
             case Field:
@@ -190,7 +190,7 @@ class HaxeComplete extends sublime.plugin.EventListener {
                         case Type: "\ttype";
                         case Package: "\tpackage";
                     }
-                    result.push(Tup2.create('$name$hint', name));
+                    result.push(Tuple2.create('$name$hint', name));
                 }
 
             case Argument:
@@ -198,7 +198,7 @@ class HaxeComplete extends sublime.plugin.EventListener {
                 return null;
         }
 
-        return Tup2.create(result, sublime.Sublime.INHIBIT_WORD_COMPLETIONS);
+        return Tuple2.create(result, sublime.Sublime.INHIBIT_WORD_COMPLETIONS);
     }
 
     public function getBuild(folder:String):Build {

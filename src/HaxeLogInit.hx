@@ -4,7 +4,7 @@ class HaxeLogInit {
             var args = [o];
             if (i != null && i.customParams != null)
                 args = args.concat(i.customParams);
-            python.lib.Builtin.print(args.join(" "));
+            python.lib.Builtins.print(args.join(" "));
         }
     }
 }
